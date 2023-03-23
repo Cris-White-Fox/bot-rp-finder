@@ -12,7 +12,7 @@ class Profile(models.Model):
     last_activity = models.DateTimeField(verbose_name="Дата последней активности", auto_now_add=True, null=True)
 
     def get_next_profile(self):
-        interacted = Interaction.objects.filter(initiator=self.id)
+        interacted = Interaction.objects.filter(initiator=self.id).values_list("subject", flat=True)
         return Profile.objects.exclude(pk__in=interacted).exclude(pk=self.pk).order_by('-last_activity').first()
 
     def profile_changed(self):
@@ -54,7 +54,7 @@ class Interaction(models.Model):
     initiator = models.ForeignKey(Profile, verbose_name="Инициатор", related_name='interaction_initiator', on_delete=models.CASCADE)
     subject = models.ForeignKey(Profile, verbose_name="Субъект", related_name='interaction_subject', on_delete=models.CASCADE)
     result = models.BooleanField(verbose_name="Результат взаимодействия")
-    viewed = models.BooleanField(verbose_name="Просмотрено")
+    viewed = models.BooleanField(verbose_name="Просмотрено", default=False)
     datetime = models.DateTimeField(verbose_name="Дата взаимодействия", auto_now_add=True, blank=True)
 
     class Meta:

@@ -129,7 +129,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # default static files settings for PythonAnywhere.
 # see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
-MEDIA_ROOT = '/home/varkunumle/mysite/media'
+MEDIA_ROOT = '/home/varkunumle/bot-rp-finder/media'
 MEDIA_URL = '/media/'
-STATIC_ROOT = '/home/varkunumle/mysite/static'
+STATIC_ROOT = '/home/varkunumle/bot-rp-finder/static'
 STATIC_URL = '/static/'
