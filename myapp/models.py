@@ -15,12 +15,34 @@ class Profile(models.Model):
         interacted = Interaction.objects.filter(initiator=self.id).values_list("subject", flat=True)
         return Profile.objects.exclude(pk__in=interacted).exclude(pk=self.pk).order_by('-last_activity').first()
 
+    def get_new_mutual(self):
+        interacted_pks = Interaction.objects.filter(initiator=self.id, result=True).values_list("subject", flat=True)
+        response_pks = Interaction.objects.filter(initiator__in=interacted_pks, subject=self.id, result=True, viewed=False).values_list("initiator", flat=True)
+        return Profile.objects.filter(pk__in=response_pks)
+
+    def change_text(self, new_text):
+        self.text = new_text
+        self.save()
+        self.profile_changed()
+
+    def change_images(self, new_images):
+        self.image_set.delete()
+        Image.objects.bulk_create([Image(self, img.iid, img.url) for img in new_images])
+        self.profile_changed()
+
     def profile_changed(self):
         Interaction.objects.filter(subject=self).delete()
+
 
     def update_activity(self):
         self.last_activity = datetime.now()
         self.save()
+
+    def like(self, subject):
+        Interaction(initiator=self, subject=subject, result=True).save()
+
+    def dislike(self, subject):
+        Interaction(initiator=self, subject=subject, result=False).save()
 
     class Meta:
         verbose_name = "Профиль пользователя"

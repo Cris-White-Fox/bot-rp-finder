@@ -19,5 +19,5 @@ from myapp.views import current_datetime
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('aaa', current_datetime, name='index'),
+    path('aaa/', current_datetime, name='index'),
 ]
